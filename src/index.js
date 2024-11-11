@@ -1,10 +1,9 @@
 import './styles/index.css';
 import {openModal, closeModal} from './components/modal.js'
 import {initialCards} from './components/cards.js';
-import {createCard, delCard, likeCard} from './components/card.js';
+import {createCard, delCard, likeCard, openCardImage} from './components/card.js';
 
 export const cardTemplate = document.querySelector('#card-template').content; // находим содержимое темплейта
-export const cardLikeBtn = cardTemplate.querySelector('.card__like-button');
 
 const popup = document.querySelector('.popup');
 const popupContent = popup.querySelector('.popup__content')
@@ -12,8 +11,6 @@ const popupUser = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image');
 const closePopupButton = popup.querySelector('.popup__close');
-const closePopupButtons = document.querySelectorAll('.popup__close');
-console.log(closePopupButtons)
 
 const profile = document.querySelector('.profile');
 const profileInfo = profile.querySelector('.profile__info')
@@ -25,6 +22,9 @@ const placesList = document.querySelector('.places__list');
 initialCards.forEach((item) => placesList.append(createCard(item, delCard, likeCard))); 
 //перебор массива, для каждого элемента выполняется функция создания карточки; вывод карточек в конец списка
 //initialCards.forEach(function(item) {placesList.append(createCard(item, delCard)});
+placesList.addEventListener('click', openCardImage);
+
+
 
 profileEditButton.addEventListener('click', () => {
   openModal(popupUser)
@@ -51,16 +51,14 @@ function addEvtListener(popupItem) {
     closeModal(popupItem);
   }
   });
-
 }
-
 
 addEvtListener(popupUser);
 addEvtListener(popupNewCard);
 addEvtListener(popupImage);
 
 
-console.log(closePopupButton);
+console.log(popupImage);
 
 //closePopupButton.addEventListener('click', closeOnBackDropClick);
 
