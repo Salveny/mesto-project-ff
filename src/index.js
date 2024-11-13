@@ -71,7 +71,7 @@ initialCards.forEach(function(item) {
   cardsContainer.append(createdCard); 
 }); 
 
-//вешаем класс на все модалки
+//вешаем класс анимации на все модалки
 popups.forEach(modal => {
   modal.classList.add('popup_is-animated') 
 });
@@ -102,10 +102,8 @@ function addEvtListener(popupItem) { //слушатели на закрытие 
     closeModal(popupItem);
   }
   });
-}
+};
 
 addEvtListener(popupUser);
 addEvtListener(popupNewCard);
 addEvtListener(popupImage);
-
-

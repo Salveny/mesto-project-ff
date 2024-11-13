@@ -31,7 +31,7 @@ function delCard(cardElement) { //функция удаления карточк
   cardElement.remove();
 };
 
-function likeCard(evt) { //лайк карточки
+function likeCard(evt) { //функция лайка карточки
   evt.target.classList.toggle('card__like-button_is-active');
 };
 
