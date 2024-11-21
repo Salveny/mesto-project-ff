@@ -8,7 +8,10 @@ import {createCard, delCard, likeCard} from './components/card.js';
 const cardTemplate = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
 
+const popup = document.querySelector('.popup');
 const popups = document.querySelectorAll('.popup');
+
+const modalCloseButtons = document.querySelectorAll('.popup__close');
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 const popupUser = document.querySelector('.popup_type_edit');
@@ -40,15 +43,16 @@ function openCardImage(cardData) { //функция открытия карти�
 };
 
 //функция редактирования профиля
-function profileFormSubmit(evt) {
+function submitProfileForm(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   profileTitle.textContent = nameInput.value; //вводимые значения будут переданы в профиль юзера
   profileDescription.textContent = jobInput.value;
   closeModal(popupUser);
 };
 // Прикрепляем обработчик к форме редактирования профиля
-profileForm.addEventListener('submit', profileFormSubmit);
+profileForm.addEventListener('submit', submitProfileForm);
 
+//форма добавления новой карточки
 function addNewCard(evt) {
   evt.preventDefault();
   const newCard = {name: placeNameInput.value, link: linkInput.value}; //вставка новых значений в поля
@@ -71,10 +75,30 @@ initialCards.forEach(function(item) {
   cardsContainer.append(createdCard); 
 }); 
 
-//вешаем класс анимации на все модалки
-popups.forEach(modal => {
-  modal.classList.add('popup_is-animated') 
+//вешаем класс анимации и слушатели закрытия оверлея на все модалки
+popups.forEach((modal) => {
+  modal.classList.add('popup_is-animated') //вешаем класс анимации
+
+  modal.addEventListener('mousedown', (evt) => {
+    if (evt.target === evt.currentTarget) {    // устанавливаем слушатель оверлея
+      closeModal(modal);
+    }  
+  })
 });
+
+//функция закрытия попапа нажатием на "крестик"
+function closeButtonPopup(popupItem) {
+ modalCloseButtons.forEach(button => {
+  const popupItem = button.closest('.popup'); //ищем ближайший к "крестику" попап
+  button.addEventListener('click', () => {
+   closeModal(popupItem);
+  })
+ })
+};
+
+closeButtonPopup(popupUser);
+closeButtonPopup(popupNewCard);
+closeButtonPopup(popupImage);
 
 //открытие модалки профиля
 profileEditButton.addEventListener('click', () => { 
@@ -87,23 +111,3 @@ profileEditButton.addEventListener('click', () => {
 profileAddButton.addEventListener('click', () => { 
   openModal(popupNewCard) 
 });
-
-function addEvtListener(popupItem) { //слушатели на закрытие попапа
-  const arr = Array.from(document.querySelectorAll('.popup__close')); //нажатие на "крестик"
-  for (let i = 0; i < arr.length; i ++) {
-    arr[i].addEventListener("click", () => {
-      //form.reset();
-      closeModal(popupItem);
-    });
-  };   
-  popupItem.addEventListener("mousedown", (evt) => { //нажатие на оверлей
-     // если event.target содержит класс "popup", то закрываем
-  if(evt.target.classList.contains('popup')) {
-    closeModal(popupItem);
-  }
-  });
-};
-
-addEvtListener(popupUser);
-addEvtListener(popupNewCard);
-addEvtListener(popupImage);

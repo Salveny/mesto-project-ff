@@ -1,4 +1,3 @@
-export { createCard, delCard, likeCard };
 
 function createCard (cardData, cardTemplate, delCard, openCardImage, likeCard) { //создаем карточку
   const cardElement = cardTemplate
@@ -35,6 +34,7 @@ function likeCard(evt) { //функция лайка карточки
   evt.target.classList.toggle('card__like-button_is-active');
 };
 
+export { createCard, delCard, likeCard };
 
 
 
