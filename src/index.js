@@ -86,19 +86,13 @@ popups.forEach((modal) => {
   })
 });
 
-//функция закрытия попапа нажатием на "крестик"
-function closeButtonPopup(popupItem) {
+// закрытие попапа нажатием на "крестик"
  modalCloseButtons.forEach(button => {
   const popupItem = button.closest('.popup'); //ищем ближайший к "крестику" попап
   button.addEventListener('click', () => {
    closeModal(popupItem);
   })
- })
-};
-
-closeButtonPopup(popupUser);
-closeButtonPopup(popupNewCard);
-closeButtonPopup(popupImage);
+ });
 
 //открытие модалки профиля
 profileEditButton.addEventListener('click', () => { 
@@ -111,3 +105,18 @@ profileEditButton.addEventListener('click', () => {
 profileAddButton.addEventListener('click', () => { 
   openModal(popupNewCard) 
 });
+
+//вызов функции валидации
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+//enableValidation({
+//  formSelector: '.popup__form',
+// inputSelector: '.popup__input',
+//  submitButtonSelector: '.popup__button',
+//  inactiveButtonClass: 'popup__button_disabled',
+//  inputErrorClass: 'popup__input_type_error',
+//  errorClass: 'popup__error_visible'
+//});
+// очистка ошибок валидации
+//clearValidation(profileForm, validationConfig); 

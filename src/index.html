@@ -49,6 +49,11 @@
               name="name"
               class="popup__input popup__input_type_name"
               placeholder="Имя"
+              minlength="2"
+              maxlength="40"
+              pattern="[A-Za-zА-Яа-яЁё\s\-]"
+              novalidate
+              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
             <input
@@ -56,6 +61,11 @@
               name="description"
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
+              minlength="2"
+              maxlength="200"
+              pattern="[A-Za-zА-Яа-яЁё\s\-]"
+              novalidate
+              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
             <button type="submit" class="button popup__button">
@@ -74,6 +84,11 @@
               name="place-name"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
+              minlength="2"
+              maxlength="30"
+              pattern="[A-Za-zА-Яа-яЁё\s\-]"
+              novalidate
+              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
             <input
