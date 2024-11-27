@@ -2,13 +2,13 @@ import './styles/index.css';
 import {openModal, closeModal} from './components/modal.js'
 import {initialCards} from './components/cards.js';
 import {createCard, delCard, likeCard} from './components/card.js';
+import { enableValidation } from './components/validation.js';
 
 //DOM-элементы
 
 const cardTemplate = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
 
-const popup = document.querySelector('.popup');
 const popups = document.querySelectorAll('.popup');
 
 const modalCloseButtons = document.querySelectorAll('.popup__close');
@@ -32,6 +32,12 @@ const linkInput = newCardForm.querySelector('.popup__input_type_url');
 const popupImage = document.querySelector('.popup_type_image');
 const modalImage = document.querySelector('.popup__image');
 const modalCaption = document.querySelector('.popup__caption');
+
+const form = document.querySelector('.popup__form'); //=formElement
+const popupInput = form.querySelector('.popup__input'); //=inputElement
+const submitButton = form.querySelector('.popup__button');
+
+
 
 //Callbacks
 function openCardImage(cardData) { //функция открытия картинки
@@ -106,17 +112,29 @@ profileAddButton.addEventListener('click', () => {
   openModal(popupNewCard) 
 });
 
-//вызов функции валидации
+//ВАЛИДАЦИЯ ФОРМ
 // включение валидации вызовом enableValidation
-// все настройки передаются при вызове
+// enableValidation({
+//   formElement: '.popup__form',
+//   inputElement: '.popup__input',
+//   buttonElement: '.popup__button',
+//   inactiveButtonClass: 'popup__button_disabled',
+//   inputErrorClass: 'popup__input_type_error',
+//   errorClass: 'popup__error_visible'
+// });
 
-//enableValidation({
-//  formSelector: '.popup__form',
-// inputSelector: '.popup__input',
-//  submitButtonSelector: '.popup__button',
-//  inactiveButtonClass: 'popup__button_disabled',
-//  inputErrorClass: 'popup__input_type_error',
-//  errorClass: 'popup__error_visible'
-//});
+
 // очистка ошибок валидации
 //clearValidation(profileForm, validationConfig); 
+
+
+// form.addEventListener('submit', function (evt) {
+//   evt.preventDefault();
+// })
+
+// // Вызовем функцию enableValidation на каждый ввод символа
+// popupInput.addEventListener('input', () => {
+//   enableValidation(form, popupInput);
+// }); 
+
+enableValidation()
