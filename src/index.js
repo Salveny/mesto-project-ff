@@ -2,7 +2,7 @@ import './styles/index.css';
 import {openModal, closeModal} from './components/modal.js'
 import {initialCards} from './components/cards.js';
 import {createCard, delCard, likeCard} from './components/card.js';
-import { enableValidation } from './components/validation.js';
+import {enableValidation, clearValidation} from './components/validation.js';
 
 //DOM-элементы
 
@@ -37,7 +37,14 @@ const form = document.querySelector('.popup__form'); //=formElement
 const popupInput = form.querySelector('.popup__input'); //=inputElement
 const submitButton = form.querySelector('.popup__button');
 
-
+const validationConfig = { // все нужные функциям классы и селекторы элементов как объект настроек для функции enableValidation
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
 
 //Callbacks
 function openCardImage(cardData) { //функция открытия картинки
@@ -102,6 +109,7 @@ popups.forEach((modal) => {
 
 //открытие модалки профиля
 profileEditButton.addEventListener('click', () => { 
+  clearValidation(profileForm, validationConfig)
   nameInput.value = profileTitle.textContent; //при открытии в полях присвоены значения..
   jobInput.value = profileDescription.textContent; // ..профиля юзера
   openModal(popupUser)
@@ -109,32 +117,9 @@ profileEditButton.addEventListener('click', () => {
 
 //открытие модалки новой карточки
 profileAddButton.addEventListener('click', () => { 
+  clearValidation(newCardForm, validationConfig)
   openModal(popupNewCard) 
 });
 
 //ВАЛИДАЦИЯ ФОРМ
-// включение валидации вызовом enableValidation
-// enableValidation({
-//   formElement: '.popup__form',
-//   inputElement: '.popup__input',
-//   buttonElement: '.popup__button',
-//   inactiveButtonClass: 'popup__button_disabled',
-//   inputErrorClass: 'popup__input_type_error',
-//   errorClass: 'popup__error_visible'
-// });
-
-
-// очистка ошибок валидации
-//clearValidation(profileForm, validationConfig); 
-
-
-// form.addEventListener('submit', function (evt) {
-//   evt.preventDefault();
-// })
-
-// // Вызовем функцию enableValidation на каждый ввод символа
-// popupInput.addEventListener('input', () => {
-//   enableValidation(form, popupInput);
-// }); 
-
-enableValidation()
+enableValidation(validationConfig)

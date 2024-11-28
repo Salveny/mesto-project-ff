@@ -52,14 +52,11 @@
               placeholder="Имя"
               minlength="2"
               maxlength="40"
-              aria-describedby="name-error"
+              pattern="[a-zA-Zа-яА-ЯёЁ\s\-]+"
+              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
             <span class="name-error"></span>
-            <!--<span class="popup__input-error input__name-error" id="name-error"></span>
-                          pattern="^[A-Za-zА-Яа-яЁё\s\-]+$"
-              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
--->
             <input
               type="text"
               name="description"
@@ -68,14 +65,11 @@
               placeholder="Занятие"
               minlength="2"
               maxlength="200"
-              aria-describedby="description-error"
+              pattern="[a-zA-Zа-яА-ЯёЁ\s\-]+"
+              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
             <span class="description-error"></span>
-           <!-- <span class="popup__input-error input__description-error" id="description-error"></span>
-                          pattern="^[A-Za-zА-Яа-яЁё\s\-]+$"
-              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
--->
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -95,10 +89,10 @@
               placeholder="Название"
               minlength="2"
               maxlength="30"
+              pattern="[a-zA-Zа-яА-ЯёЁ\s\-]+"
+              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
-            <!--pattern="^[A-Za-zА-Яа-яЁё\s\-]+$"
-              data-error-message = "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"-->
             <span class="place-name-error"></span>
 
             <input
@@ -109,7 +103,6 @@
               placeholder="Ссылка на картинку"
               required
             />
-            <!--pattern="[^https?:\/\/A-Za-z\S]"-->
             <span class="link-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
