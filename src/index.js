@@ -3,6 +3,7 @@ import {openModal, closeModal} from './components/modal.js'
 import {initialCards} from './components/cards.js';
 import {createCard, delCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from './components/validation.js';
+import {getUserInfo, getDefaultCards, editingUserInfo} from './components/api.js'
 
 //DOM-элементы
 
@@ -33,9 +34,7 @@ const popupImage = document.querySelector('.popup_type_image');
 const modalImage = document.querySelector('.popup__image');
 const modalCaption = document.querySelector('.popup__caption');
 
-const form = document.querySelector('.popup__form'); //=formElement
-const popupInput = form.querySelector('.popup__input'); //=inputElement
-const submitButton = form.querySelector('.popup__button');
+let myId = '';//мой ID
 
 const validationConfig = { // все нужные функциям классы и селекторы элементов как объект настроек для функции enableValidation
   formSelector: '.popup__form',
@@ -57,9 +56,13 @@ function openCardImage(cardData) { //функция открытия карти�
 
 //функция редактирования профиля
 function submitProfileForm(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  profileTitle.textContent = nameInput.value; //вводимые значения будут переданы в профиль юзера
-  profileDescription.textContent = jobInput.value;
+  evt.preventDefault();
+ 
+  editingUserInfo(nameInput.value, jobInput.value)
+  .then (() => {
+    profileTitle.textContent = nameInput.value;
+    profileDescription.textContent = jobInput.value;
+  })
   closeModal(popupUser);
 };
 // Прикрепляем обработчик к форме редактирования профиля
@@ -77,16 +80,47 @@ function addNewCard(evt) {
 //Прикрепляем обработчик к форме добавления карточки
 newCardForm.addEventListener('submit', addNewCard);
 
-//перебор массива, для каждого элемента выполняется функция создания карточки; вывод карточек в конец списка
-initialCards.forEach(function(item) {
-  const createdCard = createCard(
-    {name: item.name, link: item.link}, 
-    cardTemplate,
-    delCard, 
-    openCardImage,
-    likeCard);
-  cardsContainer.append(createdCard); 
-}); 
+const promisses = [getUserInfo(), getDefaultCards()];
+
+Promise.all(promisses) //нужно получить сразу массив карточек и id юзера для их отображения
+.then(([userData, cards]) => {
+  profileTitle.textContent = userData.name; 
+  profileDescription.textContent = userData.about; 
+  myId = userData['_id'];
+
+  cards.forEach(function(item) { 
+    const createdCard = createCard(
+      {name: item.name, link: item.link}, 
+      cardTemplate,
+      delCard, 
+      openCardImage,
+      likeCard
+    );
+    cardsContainer.append(createdCard); 
+  }); 
+})
+
+// getUserInfo()// промис для получения данных юзера
+// .then(data => {
+//   profileTitle.textContent = data.name; //подставляем в поле profileTitle полученное с сервера значение name 
+//   profileDescription.textContent = data.about; //подставляем в поле profileDescription полученное с сервера значение about 
+//   myId = data['_id'];
+// })
+
+// // промис для получения всех карточек с сервера
+// getDefaultCards()
+// .then(data => {
+//   data.forEach(function(item) { //перебор массива, для каждого элемента выполняется функция создания карточки; вывод карточек в конец списка
+//     const createdCard = createCard(
+//       {name: item.name, link: item.link}, 
+//       cardTemplate,
+//       delCard, 
+//       openCardImage,
+//       likeCard);
+//     cardsContainer.append(createdCard); 
+//   }); 
+// })
+
 
 //вешаем класс анимации и слушатели закрытия оверлея на все модалки
 popups.forEach((modal) => {
@@ -123,3 +157,8 @@ profileAddButton.addEventListener('click', () => {
 
 //ВАЛИДАЦИЯ ФОРМ
 enableValidation(validationConfig)
+
+
+
+
+
