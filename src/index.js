@@ -3,7 +3,7 @@ import {openModal, closeModal} from './components/modal.js'
 import {initialCards} from './components/cards.js';
 import {createCard, delCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from './components/validation.js';
-import {getUserInfo, getDefaultCards, editingUserInfo} from './components/api.js'
+import {getUserInfo, getDefaultCards, editingUserInfo, addNewCardApi} from './components/api.js'
 
 //DOM-элементы
 
@@ -71,12 +71,23 @@ profileForm.addEventListener('submit', submitProfileForm);
 //форма добавления новой карточки
 function addNewCard(evt) {
   evt.preventDefault();
-  const newCard = {name: placeNameInput.value, link: linkInput.value}; //вставка новых значений в поля
-  const createdCard = createCard(newCard, cardTemplate, delCard, openCardImage, likeCard);
-  cardsContainer.prepend(createdCard); //вставка новой карточки в начало списка
-  newCardForm.reset(); //очистка формы перед закрытием
-  closeModal(popupNewCard);
+
+  addNewCardApi(placeNameInput.value, linkInput.value)
+    .then(newCardData => {
+      const newCard = createCard(
+        {name: newCardData.name, link: newCardData.link},//вставка новых значений в поля
+        cardTemplate,
+        delCard,
+        openCardImage,
+        likeCard
+      );
+
+      cardsContainer.prepend(newCard); //вставка новой карточки в начало списка
+      newCardForm.reset(); //очистка формы перед закрытием
+      closeModal(popupNewCard);
+    })
 };
+
 //Прикрепляем обработчик к форме добавления карточки
 newCardForm.addEventListener('submit', addNewCard);
 

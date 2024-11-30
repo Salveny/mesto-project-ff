@@ -41,3 +41,17 @@ export const getDefaultCards = () => {
     }).then(res => res.json())
 }
 
+//добавление новой карточки
+export const addNewCardApi = (name, link) => {
+    return fetch(`${apiInfo.mainUrl}cards`, {
+        method: "POST",
+        headers: {
+            authorization: '96fbd8d6-e70e-4679-a331-b57f6174f30c',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            link: link,
+          })
+    }).then(res => res.json())
+}
