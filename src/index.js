@@ -3,7 +3,7 @@ import {openModal, closeModal} from './components/modal.js'
 import {initialCards} from './components/cards.js';
 import {createCard, delCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from './components/validation.js';
-import {getUserInfo, getDefaultCards, editingUserInfo, addNewCardApi} from './components/api.js'
+import {getUserInfo, getDefaultCards, editUserInfo, addNewCardApi} from './components/api.js'
 
 //DOM-элементы
 
@@ -11,20 +11,26 @@ const cardTemplate = document.querySelector('#card-template').content;
 const cardsContainer = document.querySelector('.places__list');
 
 const popups = document.querySelectorAll('.popup');
-
 const modalCloseButtons = document.querySelectorAll('.popup__close');
 
-const profileEditButton = document.querySelector('.profile__edit-button');
+const popupNewAvatar = document.querySelector('.popup_type_new-avatar');
+const avatarForm = document.forms['new-avatar'];
+const avatarFormLinkInput = avatarForm.querySelector('.popup__input_type_avatar-url')
+
+
 const popupUser = document.querySelector('.popup_type_edit');
+const profileImage = document.querySelector('.profile__image');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileEditButton = document.querySelector('.profile__edit-button');
 
 const profileForm = document.forms['edit-profile'];
 const nameInput = profileForm.querySelector('.popup__input_type_name');
 const jobInput = profileForm.querySelector('.popup__input_type_description');
 
-const profileAddButton = document.querySelector('.profile__add-button');
+
 const popupNewCard = document.querySelector('.popup_type_new-card');
+const profileAddButton = document.querySelector('.profile__add-button');
 
 const newCardForm = document.forms['new-place'];
 const placeNameInput = newCardForm.querySelector('.popup__input_type_card-name');
@@ -58,13 +64,17 @@ function openCardImage(cardData) { //функция открытия карти�
 function submitProfileForm(evt) {
   evt.preventDefault();
  
-  editingUserInfo(nameInput.value, jobInput.value)
+  editUserInfo(nameInput.value, jobInput.value)
   .then (() => {
     profileTitle.textContent = nameInput.value;
     profileDescription.textContent = jobInput.value;
   })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  }); 
   closeModal(popupUser);
 };
+
 // Прикрепляем обработчик к форме редактирования профиля
 profileForm.addEventListener('submit', submitProfileForm);
 
@@ -75,8 +85,9 @@ function addNewCard(evt) {
   addNewCardApi(placeNameInput.value, linkInput.value)
     .then(newCardData => {
       const newCard = createCard(
-        {name: newCardData.name, link: newCardData.link},//вставка новых значений в поля
+        newCardData,//вставка новых значений в поля
         cardTemplate,
+        myId,
         delCard,
         openCardImage,
         likeCard
@@ -86,23 +97,28 @@ function addNewCard(evt) {
       newCardForm.reset(); //очистка формы перед закрытием
       closeModal(popupNewCard);
     })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
+    }); 
 };
 
 //Прикрепляем обработчик к форме добавления карточки
 newCardForm.addEventListener('submit', addNewCard);
 
+//нужно получить сразу массив карточек и id юзера для их отображения
 const promisses = [getUserInfo(), getDefaultCards()];
-
-Promise.all(promisses) //нужно получить сразу массив карточек и id юзера для их отображения
+Promise.all(promisses) 
 .then(([userData, cards]) => {
   profileTitle.textContent = userData.name; 
-  profileDescription.textContent = userData.about; 
+  profileDescription.textContent = userData.about;
+  profileImage.style.backgroundImage =  `url(${userData.avatar})`;
   myId = userData['_id'];
 
-  cards.forEach(function(item) { 
+  cards.forEach(function(card) { 
     const createdCard = createCard(
-      {name: item.name, link: item.link}, 
+      card, 
       cardTemplate,
+      myId,
       delCard, 
       openCardImage,
       likeCard
@@ -110,15 +126,19 @@ Promise.all(promisses) //нужно получить сразу массив к�
     cardsContainer.append(createdCard); 
   }); 
 })
+.catch((err) => {
+  console.log(err); // выводим ошибку в консоль
+}); 
 
 // getUserInfo()// промис для получения данных юзера
 // .then(data => {
 //   profileTitle.textContent = data.name; //подставляем в поле profileTitle полученное с сервера значение name 
 //   profileDescription.textContent = data.about; //подставляем в поле profileDescription полученное с сервера значение about 
+// profileImage.style.backgroundImage = `url(${data.avatar})`;
 //   myId = data['_id'];
 // })
 
-// // промис для получения всех карточек с сервера
+// промис для получения всех карточек с сервера
 // getDefaultCards()
 // .then(data => {
 //   data.forEach(function(item) { //перебор массива, для каждого элемента выполняется функция создания карточки; вывод карточек в конец списка
@@ -131,7 +151,6 @@ Promise.all(promisses) //нужно получить сразу массив к�
 //     cardsContainer.append(createdCard); 
 //   }); 
 // })
-
 
 //вешаем класс анимации и слушатели закрытия оверлея на все модалки
 popups.forEach((modal) => {
@@ -151,6 +170,13 @@ popups.forEach((modal) => {
    closeModal(popupItem);
   })
  });
+
+//открытие модалки смены аватара
+const NewAvatarButton = document.querySelector('.profile__image');
+NewAvatarButton.addEventListener('click', () => { 
+  clearValidation(avatarForm, validationConfig);
+  openModal(popupNewAvatar);
+});
 
 //открытие модалки профиля
 profileEditButton.addEventListener('click', () => { 

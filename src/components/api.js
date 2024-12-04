@@ -6,7 +6,8 @@
 const apiInfo = { 
     mainUrl: 'https://nomoreparties.co/v1/wff-cohort-27/',
     headers: {
-        authorization: '96fbd8d6-e70e-4679-a331-b57f6174f30c'
+        authorization: '96fbd8d6-e70e-4679-a331-b57f6174f30c',
+        'Content-Type': 'application/json'
     }
 }
 
@@ -15,22 +16,33 @@ export const getUserInfo = () => {
     return fetch(`${apiInfo.mainUrl}users/me`, { //https://nomoreparties.co/v1/wff-cohort-27/users/me
         method: "GET",
         headers: apiInfo.headers
-    }).then(res => res.json())
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
 }
 
 //запрос на редактирование профиля
-export const editingUserInfo = (name, about) => {
+export const editUserInfo = (name, about) => {
     return fetch(`${apiInfo.mainUrl}users/me`, { 
         method: "PATCH",
-        headers: {
-            authorization: '96fbd8d6-e70e-4679-a331-b57f6174f30c',
-            'Content-Type': 'application/json'
-        },
+        headers: apiInfo.headers,
         body: JSON.stringify({
             name: name,
             about: about
           })
-    }).then(res => res.json())
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
 }
 
 //получаем данные карточек с сервера
@@ -38,20 +50,62 @@ export const getDefaultCards = () => {
     return fetch(`${apiInfo.mainUrl}cards`, { //https://nomoreparties.co/v1/wff-cohort-27/cards
         method: "GET",
         headers: apiInfo.headers
-    }).then(res => res.json())
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
 }
 
 //добавление новой карточки
 export const addNewCardApi = (name, link) => {
     return fetch(`${apiInfo.mainUrl}cards`, {
         method: "POST",
-        headers: {
-            authorization: '96fbd8d6-e70e-4679-a331-b57f6174f30c',
-            'Content-Type': 'application/json'
-        },
+        headers: apiInfo.headers,
         body: JSON.stringify({
             name: name,
             link: link,
           })
-    }).then(res => res.json())
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
 }
+
+//удаление карточки
+export const delNewCardApi = (id) => {
+    return fetch(`${apiInfo.mainUrl}cards/${id}`, {
+        method: "DELETE",
+        headers: apiInfo.headers
+        })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
+}
+
+//постановка и снятие лайка
+export const addAndDelLikes = (id, isLiked) => {
+    return fetch(`${apiInfo.mainUrl}cards/likes/${id}`, {
+        method: isLiked? 'DELETE': 'PUT', //если isLiked = true, то удалить лайк, иначе установить
+        headers: apiInfo.headers
+        })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
+}
+
