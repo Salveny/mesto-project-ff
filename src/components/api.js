@@ -45,6 +45,24 @@ export const editUserInfo = (name, about) => {
       });
 }
 
+//обновление аватара юзера
+export const editUserAvatar = (link) => {
+    return fetch(`${apiInfo.mainUrl}users/me/avatar`, { 
+        method: "PATCH",
+        headers: apiInfo.headers,
+        body: JSON.stringify({
+            avatar: link
+          })
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
+}
+
 //получаем данные карточек с сервера
 export const getDefaultCards = () => {
     return fetch(`${apiInfo.mainUrl}cards`, { //https://nomoreparties.co/v1/wff-cohort-27/cards

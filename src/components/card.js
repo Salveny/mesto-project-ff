@@ -17,7 +17,7 @@ function createCard (cardData, cardTemplate, userId, delCard, openCardImage, lik
   cardLikes.textContent = cardData.likes.length;
   
   const deleteButton = cardElement.querySelector('.card__delete-button'); //кнопка удаления 
-  
+
   if(userId !== cardData.owner._id) { //кнопка удаления работает только для хозяина карточки
     deleteButton.style.display = 'none';
   } else {
@@ -53,8 +53,6 @@ function delCard(cardElement, id) { //функция удаления карто
     console.log(err); // выводим ошибку в консоль
   }); 
 };
-
-
 
 function likeCard(button, id, likeItem) { //функция лайка карточки
   const isLiked = button.classList.contains('card__like-button_is-active');
