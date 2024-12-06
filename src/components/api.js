@@ -11,19 +11,21 @@ const apiInfo = {
     }
 }
 
+const checkAnswer = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  // если ошибка, отклоняем промис
+  return Promise.reject(`Ошибка: ${res.status}`);
+}
+
 //получаем данные юзера с сервера
 export const getUserInfo = () => {
     return fetch(`${apiInfo.mainUrl}users/me`, { //https://nomoreparties.co/v1/wff-cohort-27/users/me
         method: "GET",
         headers: apiInfo.headers
     })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 
 //запрос на редактирование профиля
@@ -36,13 +38,7 @@ export const editUserInfo = (name, about) => {
             about: about
           })
     })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 
 //обновление аватара юзера
@@ -54,13 +50,7 @@ export const editUserAvatar = (link) => {
             avatar: link
           })
     })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 
 //получаем данные карточек с сервера
@@ -69,13 +59,7 @@ export const getDefaultCards = () => {
         method: "GET",
         headers: apiInfo.headers
     })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 
 //добавление новой карточки
@@ -88,13 +72,7 @@ export const addNewCardApi = (name, link) => {
             link: link,
           })
     })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 
 //удаление карточки
@@ -103,13 +81,7 @@ export const delNewCardApi = (id) => {
         method: "DELETE",
         headers: apiInfo.headers
         })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 
 //постановка и снятие лайка
@@ -118,12 +90,6 @@ export const addAndDelLikes = (id, isLiked) => {
         method: isLiked? 'DELETE': 'PUT', //если isLiked = true, то удалить лайк, иначе установить
         headers: apiInfo.headers
         })
-    .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      });
+    .then(checkAnswer);
 }
 

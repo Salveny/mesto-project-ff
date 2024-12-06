@@ -1,6 +1,5 @@
 import './styles/index.css';
 import {openModal, closeModal} from './components/modal.js'
-import {initialCards} from './components/cards.js';
 import {createCard, delCard, likeCard} from './components/card.js';
 import {enableValidation, clearValidation} from './components/validation.js';
 import {getUserInfo, getDefaultCards, editUserInfo, addNewCardApi, editUserAvatar} from './components/api.js'
@@ -63,7 +62,6 @@ function openCardImage(cardData) { //функция открытия карти�
 //функция редактирования профиля
 function submitProfileForm(evt) {
   evt.preventDefault();
-
   const button = profileForm.querySelector('.popup__button')
   button.textContent = 'Сохранение...'
  
@@ -71,6 +69,7 @@ function submitProfileForm(evt) {
   .then (() => {
     profileTitle.textContent = nameInput.value;
     profileDescription.textContent = jobInput.value;
+    closeModal(popupUser);
   })
   .catch((err) => {
     console.log(err); // выводим ошибку в консоль
@@ -78,7 +77,6 @@ function submitProfileForm(evt) {
   .finally(() => {
     button.textContent = 'Сохранить'
   })
-  closeModal(popupUser);
 };
 
 // Прикрепляем обработчик к форме редактирования профиля
@@ -184,8 +182,8 @@ popups.forEach((modal) => {
  });
 
 //открытие модалки смены аватара
-const NewAvatarButton = document.querySelector('.profile__image');
-NewAvatarButton.addEventListener('click', () => { 
+const newAvatarButton = document.querySelector('.profile__image');
+newAvatarButton.addEventListener('click', () => { 
   clearValidation(avatarForm, validationConfig);
   openModal(popupNewAvatar);
 });
@@ -200,6 +198,8 @@ function submitAvatarForm(evt) {
   editUserAvatar(avatarFormLinkInput.value)
   .then (userData => {
     profileImage.style.backgroundImage =  `url(${userData.avatar})`;
+    closeModal(popupNewAvatar);
+    avatarForm.reset()
 
   })
   .catch((err) => {
@@ -208,8 +208,6 @@ function submitAvatarForm(evt) {
   .finally(() => {
     button.textContent = 'Сохранить'
   })
-  closeModal(popupNewAvatar);
-  avatarForm.reset()
 };
 
 avatarForm.addEventListener('submit', submitAvatarForm);

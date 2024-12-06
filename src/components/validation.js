@@ -11,12 +11,11 @@ function showInputError (formElement, inputElement, errorMessage, validationConf
 
 function hideInputError(formElement, inputElement, validationConfig) {
     const {inputErrorClass, errorClass} = validationConfig;
-
-     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-     inputElement.classList.remove(inputErrorClass);
-     errorElement.textContent = ''; //Очистка свойства textContent элемента formError
-     errorElement.classList.remove(errorClass); // Скрываем сообщение об ошибке
-     
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.remove(inputErrorClass);
+    errorElement.textContent = ''; //Очистка свойства textContent элемента formError
+    errorElement.classList.remove(errorClass); // Скрываем сообщение об ошибке
+    inputElement.setCustomValidity('');
 }
 
 function isValid (formElement, inputElement, validationConfig) {
@@ -28,7 +27,7 @@ function isValid (formElement, inputElement, validationConfig) {
   } else {
         // если передать пустую строку, то будут доступны
         // стандартные браузерные сообщения
-    inputElement.setCustomValidity("");
+    inputElement.setCustomValidity('');
   }
 
      if (!inputElement.validity.valid) {
@@ -76,7 +75,7 @@ const setEventListeners = (formElement, validationConfig) => {
 //активация валидации
 export const enableValidation = (validationConfig) => {
     const {formSelector} = validationConfig;
-   const formList = Array.from(document.querySelectorAll(formSelector));
+    const formList = Array.from(document.querySelectorAll(formSelector));
     formList.forEach((formElement) => {
         formElement.addEventListener('submit', (evt) => {
           evt.preventDefault();
@@ -91,19 +90,8 @@ export function clearValidation (formElement, validationConfig) {
     const inputList = Array.from(formElement.querySelectorAll(inputSelector));
     const buttonElement = formElement.querySelector(submitButtonSelector);
 
-
     inputList.forEach(input => {
         hideInputError(formElement, input, validationConfig)
     })
-
     buttonElement.classList.add(inactiveButtonClass)
-    
-
 }
-
-
-
-
-
-
-
